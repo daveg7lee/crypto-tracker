@@ -73,9 +73,9 @@ function Coins() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
-      const res = await fetch('https://api.coinpaprika.com/v1/coins');
-      const data: CoinInterface[] = await res.json();
-      setCoins(data.filter((coin) => coin.is_active === true));
+      const response = await fetch('https://api.coinpaprika.com/v1/coins');
+      const json = await response.json();
+      setCoins(json.slice(0, 100));
       setLoading(false);
     })();
   }, []);
