@@ -65,6 +65,9 @@ body {
   color:${(props) => props.theme.textColor};
   line-height: 1.2;
   padding-bottom: 1rem;
+  ::-webkit-scrollbar-track {
+    display: none;
+  }
 }
 a {
   text-decoration:none;
