@@ -84,7 +84,7 @@ const ToggleBtn = styled.div`
 `;
 
 function App() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(true);
   const toggleDark = () => setIsDark((current) => !current);
   return (
     <>
