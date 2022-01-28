@@ -5,6 +5,7 @@ import {
   Switch,
   Route,
   useRouteMatch,
+  useHistory,
 } from 'react-router';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -12,6 +13,7 @@ import { fetchCoinInfo, fetchCoinTickers } from '../api';
 import Chart from './Chart';
 import { Helmet } from 'react-helmet';
 import Price from './Price';
+import { BiArrowBack } from 'react-icons/bi';
 
 const Title = styled.h1`
   font-size: 48px;
@@ -34,14 +36,17 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  font-size: 1.5rem;
 `;
 
 const Overview = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.cardBgColor};
   padding: 10px 20px;
   border-radius: 10px;
+  margin-bottom: 30px;
 `;
 const OverviewItem = styled.div`
   display: flex;
@@ -71,7 +76,7 @@ const Tab = styled.span<{ isActive: boolean }>`
   text-transform: uppercase;
   font-size: 12px;
   font-weight: 400;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.cardBgColor};
   border-radius: 10px;
   color: ${(props) =>
     props.isActive ? props.theme.accentColor : props.theme.textColor};
@@ -79,6 +84,12 @@ const Tab = styled.span<{ isActive: boolean }>`
     padding: 7px 0px;
     display: block;
   }
+`;
+
+const Back = styled(BiArrowBack)`
+  position: absolute;
+  left: 0;
+  cursor: pointer;
 `;
 
 interface RouteParams {
@@ -144,9 +155,14 @@ interface PriceData {
   };
 }
 
-function Coin() {
+interface IProps {
+  isDark: boolean;
+}
+
+function Coin({ isDark }: IProps) {
   const { coinId } = useParams<RouteParams>();
   const { state } = useLocation<RouteState>();
+  const history = useHistory();
 
   const priceMatch = useRouteMatch('/:coinId/price');
   const chartMatch = useRouteMatch('/:coinId/chart');
@@ -171,6 +187,7 @@ function Coin() {
         </title>
       </Helmet>
       <Header>
+        <Back onClick={() => history.push('/')} />
         <Title>
           {state?.name ? state.name : loading ? 'Loading...' : infoData?.name}
         </Title>
@@ -214,10 +231,10 @@ function Coin() {
           </Overview>
           <Switch>
             <Route path={`/:coinId/price`}>
-              <Price />
+              <Price coinId={coinId} tickersData={tickersData} />
             </Route>
             <Route path={`/:coinId/chart`}>
-              <Chart coinId={coinId} />
+              <Chart coinId={coinId} isDark={isDark} />
             </Route>
           </Switch>
         </>

@@ -1,5 +1,9 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { darkTheme, lightTheme } from './theme';
+import { BiSun, BiMoon } from 'react-icons/bi';
+import { useState } from 'react';
 import Router from './Router';
+import styled from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
 
@@ -60,6 +64,7 @@ body {
   background-color:${(props) => props.theme.bgColor};
   color:${(props) => props.theme.textColor};
   line-height: 1.2;
+  padding-bottom: 1rem;
 }
 a {
   text-decoration:none;
@@ -67,11 +72,26 @@ a {
 }
 `;
 
+const ToggleBtn = styled.div`
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  cursor: pointer;
+  font-size: 1.5rem;
+`;
+
 function App() {
+  const [isDark, setIsDark] = useState(false);
+  const toggleDark = () => setIsDark((current) => !current);
   return (
     <>
-      <GlobalStyle />
-      <Router />
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <ToggleBtn onClick={toggleDark}>
+          {isDark ? <BiMoon /> : <BiSun />}
+        </ToggleBtn>
+        <GlobalStyle />
+        <Router isDark={isDark} />
+      </ThemeProvider>
     </>
   );
 }
